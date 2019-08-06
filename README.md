@@ -1,4 +1,6 @@
-# urban-dictionary
+# Urban Dictionary
+
+#### Urban Dictionary built using Vue.js.
 
 ## Project setup
 ```
