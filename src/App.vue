@@ -1,21 +1,22 @@
 <template>
-  <div id="app" class="container">
-    <div class="col-12 col-md-8 col-lg-8">
+  <div id="app" class="">
+    <div class="col-12">
       <Search></Search>
-      <Definitions></Definitions>
+      
     </div>
     
   </div>
 </template>
 
 <script>
-import Search from './components/Search'
-import Definitions from './components/Definitions'
+import Search from './components/Search.vue'
+
+
 
 export default {
   name: 'app',
   components: {
-    Search, Definitions
+    Search
   }
 }
 </script>
