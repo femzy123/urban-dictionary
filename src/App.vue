@@ -1,9 +1,10 @@
 <template>
-  <div id="app" class="">
-    <div class="col-12">
+  <div id="app">
+    <div class="">
       <Search></Search>
-      
     </div>
+
+    
     
   </div>
 </template>

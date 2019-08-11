@@ -1,26 +1,100 @@
 <template>
     <div>
 
-        <nav class="navbar navbar-light bg-light justify-content-between">
-            <a class="navbar-brand">Urban Dictionary</a>
-            <form class="form-inline" v-on:submit.prevent="onSubmit">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" v-model="text" v-on:keyup.enter="getDefinitions">
-                <button class="btn btn-outline-success my-2 my-sm-0" @click="getDefinitions">Search</button>
-            </form>
+        <nav class="navbar navbar-light bg-dark indigo justify-content-between">
+            <h6 class="navbar-brand text-white">Urban Dictionary</h6>
         </nav>
-        
-        <div>
-            <div><h3> {{ searchText }}</h3></div><br>
-            
-            <div v-for="definition in definitions" v-bind:key="definition.defid">
-                <h5>Definition</h5>
-                <p>{{definition.definition}}</p>                
-                <p><strong>Example: </strong> {{ definition.example }}</p>
-                <small><em>Author: {{ definition.author}}</em></small>
-                <hr>
+
+        <div class="container">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Search" v-model="text" v-on:keyup.enter="getDefinitions">
+                <div class="input-group-append">
+                    <button class="btn btn-secondary" type="button" @click="getDefinitions">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+            </div>
+            <br>
+            <div class="text-right" v-if="fav">
+                <a class="btn-floating btn-sm btn-secondary"><span class="text-white mr-1">{{ favorite }} </span> <i class="fa fa-heart fa-lg text-white"></i></a>
+            </div>
+
+            <div class="definitions">
+                
+                
+                <div v-for="definition in definitions" v-bind:key="definition.defid">
+                    <div class="card">
+                        <div class="card-body">
+                            <h3 class="card-title word"> {{ searchText }}</h3>
+                            <p class="card-text">{{definition.definition}}</p>                
+                            <p><em> {{ definition.example }}</em></p>
+                            <small>By: <cite title="Source Title">{{ definition.author}}</cite></small>
+                            <div class="float-right">
+                                <a class="card-link"><i class="fa fa-thumbs-up"> {{ definition.thumbs_up }}</i></a> 
+                                <a class="card-link"><i class="fa fa-thumbs-down"> {{ definition.thumbs_down }}</i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="" v-if="beforeResult">
+                <div class="text-center"><i class="fa fa-5x fa-arrow-up cyan-text"></i></div>
+                <h3>Search for a word using the search box above</h3>
+            </div>
+
+            <div class="" v-if="noResult">
+                <div class="text-center"><i class="fas fa-sad-tear"></i></div>
+                <h3>Search word not found</h3>
+                <p>Try another word</p>
             </div>
         </div>
-        
+
+        <footer class="page-footer font-small fixed-bottom footer">
+
+           
+            <div class="container-fluid text-center footer-link">
+                <div class="container">
+                
+                    <div class="row">
+
+                    
+                        <div class="col-4 text-center mt-3 mb-3">
+                            <button class="btn btn-flat"><i class="fa fa-history fa-lg text-white"></i><span class="badge badge-info ml-2">{{ history.length }}</span>
+                            </button>
+                        </div>
+                        
+
+                        
+
+                        
+                        <div class="col-4 text-center mt-3 mb-3">
+                            <button class="btn btn-flat"><i class="fa fa-heart fa-lg text-white"></i><span class="badge badge-info ml-2">9</span>
+                            </button>
+                        </div>
+                        
+
+                        
+
+                        
+                        <div class="col-4 text-center mt-3 mb-3">
+                            <button class="btn btn-flat"><i class="fa fa-info-circle fa-lg text-white"></i></button>
+                        </div>
+                        
+
+                    </div>
+                    
+                </div>
+            </div>
+           
+
+            <div class="footer-copyright text-center py-3">© 2019 Copyright:
+                <a href="#">D Weird Coder</a>
+            </div>
+            
+        </footer>
+
+
     </div>
 </template>
 
@@ -34,23 +108,66 @@ export default {
         return {
             text: "",
             definitions: [],
-            searchText: ""
+            searchText: "",
+            beforeResult: true,
+            noResult: false,
+            favorite: "Like",
+            fav: false,
+            history: []
         }
     },
     methods: {
         getDefinitions: function() {
+            this.definitions = []
+            this.history.push(this.text)
+            var self = this
             this.searchText = this.text
             axios.get('http://api.urbandictionary.com/v0/define?term=' + this.text)
-            .then(response => {
-                console.log(response.data.list)
-                this.definitions = response.data.list
+            .then(function(response) {
+                // console.log(response.data.list)
+                if(response.data.list.length === 0) {
+                    self.noResult = true
+                    self.fav = false
+                    // self.history.push(self.text)
+                } else {
+                self.definitions = response.data.list
+                self.fav = true
+                }
             })            
-            .catch(err => console.log(err))
+            .catch(function (error) {
+                console.log(error);
+            })
+
+            this.beforeResult = false
+            console.log(this.history)
         }
     }
 }
 </script>
 
-<style>
+<style scoped>
+    .word {
+        text-transform: capitalize;
+        color: blue;
+    }
 
+    nav {
+        margin-bottom: 1rem;
+    }
+
+    .card {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
+    .definitions {
+        margin-bottom: 9rem;
+    }
+    .footer {
+        background: #343a40;
+        color: #fff;
+    }
+    .footer-link {
+        background: #343A5F;
+        color: #fff;
+    }
 </style>
