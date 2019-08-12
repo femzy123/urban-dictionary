@@ -1,7 +1,7 @@
 <template>
     <div>
 
-        <nav class="navbar navbar-light bg-dark indigo justify-content-between">
+        <nav class="navbar navbar-light bg-dark indigo justify-content-between fixed">
             <h6 class="navbar-brand text-white">Urban Dictionary</h6>
         </nav>
 
@@ -40,7 +40,7 @@
 
             <div class="" v-if="beforeResult">
                 <div class="text-center"><i class="fa fa-5x fa-arrow-up cyan-text"></i></div>
-                <h3>Search for a word using the search box above</h3>
+                <h3 class="text-center">Search for a word using the search box above</h3>
             </div>
 
             <div class="" v-if="noResult">
@@ -48,6 +48,7 @@
                 <h3>Search word not found</h3>
                 <p>Try another word</p>
             </div>
+
         </div>
 
         <footer class="page-footer font-small fixed-bottom footer">
@@ -60,7 +61,7 @@
 
                     
                         <div class="col-4 text-center mt-3 mb-3">
-                            <button class="btn btn-flat"><i class="fa fa-history fa-lg text-white"></i><span class="badge badge-info ml-2">{{ history.length }}</span>
+                            <button class="btn btn-flat" id="modalActivate" data-toggle="modal" data-target="#exampleModalPreview" @click="historyResult"><i class="fa fa-history fa-lg text-white"></i><span class="badge badge-info ml-2">{{ history.length }}</span>
                             </button>
                         </div>
                         
@@ -94,6 +95,34 @@
             
         </footer>
 
+        <!-- Button trigger modal -->
+        <!-- <button id="modalActivate" type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModalPreview">
+        Launch demo modal
+        </button> -->
+        <!-- Modal -->
+        <div class="modal fade right" id="exampleModalPreview" tabindex="-1" role="dialog" aria-labelledby="exampleModalPreviewLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalPreviewLabel">History</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="white">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item" v-for="history in history" :key="history"><h6>{{ history }}</h6></li>
+                    </ul>
+                    <h5 v-if="noHistory">No search have been made yet.</h5>
+                </div>
+                <!-- <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div> -->
+            </div>
+        </div>
+        </div>
+        <!-- Modal -->
 
     </div>
 </template>
@@ -113,7 +142,8 @@ export default {
             noResult: false,
             favorite: "Like",
             fav: false,
-            history: []
+            history: [],
+            noHistory: false
         }
     },
     methods: {
@@ -140,6 +170,14 @@ export default {
 
             this.beforeResult = false
             console.log(this.history)
+        },
+        historyResult: function() {
+            console.log(this.history)
+            if (this.history.length === 0) {
+                this.noHistory = true
+            }else{
+                this.noHistory = false
+            }
         }
     }
 }
@@ -168,6 +206,26 @@ export default {
     }
     .footer-link {
         background: #343A5F;
+        color: #fff;
+    }
+
+    .modal-dialog {
+        /* top: 0px !important; */
+        margin-top: 0px;
+        /* margin-bottom:0px; */
+        right: 0;
+        position: absolute !important;
+        width: 50vw;
+    }
+    .modal-content {
+        /* right: 0px; */
+        height: 100vh;
+    }
+    .modal-header {
+        background: #343A5F;
+        color: #fff;
+    }
+    .white {
         color: #fff;
     }
 </style>
