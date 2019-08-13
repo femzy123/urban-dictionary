@@ -5,6 +5,10 @@
             <h6 class="navbar-brand text-white">Urban Dictionary</h6>
         </nav>
 
+        <div class="alert alert-warning" role="alert" v-if="warning">
+            Oops!! There was an error ({{ warningText }}). Please <a href="/" class="alert-link">try again</a>.
+        </div>
+
         <div class="container">
             <div class="input-group">
                 <input type="text" class="form-control" placeholder="Search" v-model="text" v-on:keyup.enter="getDefinitions">
@@ -194,7 +198,9 @@ export default {
             likeText: "Like",
             likeColor: "#343A5F",
             favorite: [],
-            noFavorite: false
+            noFavorite: false,
+            warning: false,
+            warningText: ""
         }
     },
     methods: {
@@ -203,9 +209,8 @@ export default {
             this.history.push(this.text)
             var self = this
             this.searchText = this.text
-            axios.get('http://api.urbandictionary.com/v0/define?term=' + this.text)
+            axios.get('https://api.urbandictionary.com/v0/define?term=' + this.text)
             .then(function(response) {
-                // console.log(response.data.list)
                 if(response.data.list.length === 0) {
                     self.noResult = true
                     self.fav = false
@@ -219,11 +224,11 @@ export default {
                 }
             })            
             .catch(function (error) {
-                console.log(error);
+                self.warningText = error
+                self.warning = true
             })
 
             this.beforeResult = false
-            console.log(this.history)
         },
         historyResult: function() {
             if (this.history.length === 0) {

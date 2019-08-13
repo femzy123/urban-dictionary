@@ -1,6 +1,9 @@
 # Urban Dictionary
 
 #### Urban Dictionary built using Vue.js.
+```
+Check the it out here https://urban-dictionary-vue.firebaseapp.com/
+```
 
 ## Project setup
 ```
